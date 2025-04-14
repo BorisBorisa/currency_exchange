@@ -1,10 +1,11 @@
 import uvicorn
 from fastapi import FastAPI
+from db.database import lifespan, get_db
 
 from app.api.endpoints import auth
 
 
-app = FastAPI()
+app = FastAPI(lifespan=lifespan)
 app.include_router(auth.auth_route)
 
 
