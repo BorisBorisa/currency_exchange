@@ -4,6 +4,8 @@ from config import settings
 
 from asyncpg import create_pool, Pool
 
+import asyncio
+
 
 pool: Pool = None
 
@@ -32,6 +34,23 @@ async def get_db():
 
 
 if __name__ == "__main__":
-    pass
+    pool: Pool = None
+
+    async def test_db_connection():
+        app = FastAPI()
+
+        assert pool is None
+
+        async with lifespan(app):
+            assert pool is not None
+            assert not pool._closed
+
+            async with pool.acquire() as conn:
+                print(await conn.fetchrow("SELECT current_database();"))
+                print(await conn.fetchrow("SELECT current_schema();"))
+
+
+    asyncio.run(test_db_connection())
+
 
 
