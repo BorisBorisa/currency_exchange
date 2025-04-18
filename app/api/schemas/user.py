@@ -1,4 +1,5 @@
 from pydantic import BaseModel, EmailStr, Field, field_validator
+from datetime import date
 import re
 
 
@@ -9,6 +10,9 @@ class User(BaseModel):
 
 class UserRegister(User):
     password: str
+    first_name: str
+    last_name: str
+    birth_date: date
 
     @field_validator("password")
     def validate_password(cls, password: str) -> str:
@@ -30,4 +34,9 @@ class UserInDB(User):
 
 
 if __name__ == "__main__":
-    assert UserRegister(email="asd@yandex.ru", username="qwsd", password="A1ssddfd@s")
+    assert UserRegister(email="asd@yandex.ru",
+                        username="qwsd",
+                        password="A1ssddfd@s",
+                        first_name="df",
+                        last_name='dfd',
+                        birth_date="2011-11-11")
