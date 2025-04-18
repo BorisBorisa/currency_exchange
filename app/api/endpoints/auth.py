@@ -1,18 +1,17 @@
 from fastapi import APIRouter, Depends, status, HTTPException
-from asyncpg import Connection, exceptions
-
+from asyncpg import Connection
 
 from asyncpg.exceptions import UniqueViolationError
-from app.database import get_connection
+from database.db_connecion import get_database_connection
 
 from app.api.schemas.user import UserRegister
-from app.core.security import hash_password, verify_password_hash
+from app.core.security import hash_password
 
 auth_route = APIRouter(prefix="/auth", tags=["auth"])
 
 
 @auth_route.post("/register", summary="Регистрация пользователя", status_code=status.HTTP_201_CREATED)
-async def register(user: UserRegister, conn: Connection = Depends(get_connection)):
+async def register(user: UserRegister, conn: Connection = Depends(get_database_connection)):
     hashed_password = hash_password(user.password)
 
     try:
