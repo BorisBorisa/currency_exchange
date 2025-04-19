@@ -33,6 +33,11 @@ class UserInDB(User):
     disabled: bool = False
 
 
+class Token(BaseModel):
+    access_token: str
+    token_type: str = "bearer"
+
+
 if __name__ == "__main__":
     assert UserRegister(email="asd@yandex.ru",
                         username="qwsd",
