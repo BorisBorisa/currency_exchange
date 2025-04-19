@@ -1,54 +1,33 @@
-from fastapi import APIRouter, Depends, status, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, status
+from typing import Annotated
+from fastapi.security import OAuth2PasswordRequestForm, OAuth2PasswordBearer
 from asyncpg import Connection
 
-from asyncpg.exceptions import UniqueViolationError
-from database.db_connecion import get_database_connection
+from db.db_connecion import get_database_connection
+from db.queries import get_user_by_username
+from app.api.schemas.user import Token, UserInDB
+from app.core.security import verify_password_hash, create_access_token
 
-from app.api.schemas.user import UserRegister
-from app.core.security import hash_password
-
-auth_route = APIRouter(prefix="/auth", tags=["auth"])
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
+auth = APIRouter()
 
 
-@auth_route.post("/register", summary="Регистрация пользователя", status_code=status.HTTP_201_CREATED)
-async def register(user: UserRegister, conn: Connection = Depends(get_database_connection)):
-    hashed_password = hash_password(user.password)
+@auth.post("/login", summary="эндпоинт для получения токена")
+async def authorization(
+        from_data: Annotated[OAuth2PasswordRequestForm, Depends()],
+        conn: Connection = Depends(get_database_connection)
+) -> Token:
 
-    try:
-        async with conn.transaction():
-            user_id = await conn.fetchval(
-                "INSERT INTO users(username, email, password_hash) VALUES($1, $2, $3) RETURNING id",
-                user.username,
-                user.email,
-                hashed_password
-            )
+    user: UserInDB = await get_user_by_username(conn, from_data.username)
+    pass_valid: bool = verify_password_hash(from_data.password, user["password_hash"])
 
-            await conn.execute(
-                "INSERT INTO user_profiles(id, first_name, last_name, birth_date) VALUES($1, $2, $3, $4)",
-                user_id,
-                user.first_name,
-                user.last_name,
-                user.birth_date
-            )
-    except UniqueViolationError as exc:
-        print(exc) # Добавить логирование
+    if not (user and pass_valid):
         raise HTTPException(
-            status_code=status.HTTP_409_CONFLICT,
-            detail="Пользователь с таким email или username уже существует"
-        )
-    except Exception as exc:
-        print(exc) # Добавить логирование
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Произошла ошибка при регистрации"
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail={"message": "Неверное имя пользователя или пароль"},
+            headers={"WWW-Authenticate": "Bearer"}
         )
 
+    access_token = create_access_token(data={"sub": from_data.username})
 
-    return {"message": "Пользователь успешно создан",
-            "username": user.username}
-
-
-
-@auth_route.post("/login", summary="Авторизация пользователя")
-async def login():
-    pass
+    return Token(access_token=access_token)
