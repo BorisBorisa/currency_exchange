@@ -1,3 +1,5 @@
+from pathlib import Path
+
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -20,7 +22,7 @@ class DatabaseSettings(BaseSettings):
         return f"postgresql://{self.USER}:{self.PASSWORD}@{self.HOST}:{self.PORT}/{self.NAME}"
 
     model_config = SettingsConfigDict(
-        env_file=".env",
+        env_file= Path(__file__).parent.parent / ".env",
         env_file_encoding="utf-8",
         env_prefix="DB_",
         case_sensitive=False,
