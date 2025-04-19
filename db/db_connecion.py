@@ -4,7 +4,7 @@ from fastapi import FastAPI, Request
 from contextlib import asynccontextmanager
 from asyncpg import create_pool, Pool
 
-from database.config import settings
+from db.config import settings
 
 
 # Инициализация и закрытие пула
@@ -42,6 +42,8 @@ if __name__ == "__main__":
             async with app.state.connection_pool.acquire() as conn:
                 print(await conn.fetchrow("SELECT current_database();"))
                 print(await conn.fetchrow("SELECT current_schema();"))
+
+                print(await conn.fetchval("SELECT EXISTS(SELECT 1)"))
 
 
     asyncio.run(test_db_connection())
