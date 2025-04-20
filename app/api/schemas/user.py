@@ -35,7 +35,7 @@ class UserInDB(User):
 
 class Token(BaseModel):
     access_token: str
-    token_type: str = "bearer"
+    token_type: str
 
 
 if __name__ == "__main__":
