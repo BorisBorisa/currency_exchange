@@ -14,26 +14,12 @@ reg_route = APIRouter(prefix="/auth", tags=["auth"])
 
 @reg_route.post("/register", summary="Регистрация пользователя", status_code=status.HTTP_201_CREATED)
 async def register(user: UserRegister, conn: Connection = Depends(get_database_connection)):
-    try:
-        await register_user_in_db(
-            conn,
-            user,
-            hash_password(user.password)
-        )
 
-    except UniqueViolationError as exc:
-        print(exc)  # Добавить логирование
-        raise HTTPException(
-            status_code=status.HTTP_409_CONFLICT,
-            detail="Пользователь с таким email или username уже существует"
-        )
-
-    except PostgresError as exc:
-        print(exc)  # Добавить логирование
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Произошла ошибка при регистрации"
-        )
+    await register_user_in_db(
+        conn,
+        user,
+        hash_password(user.password)
+    )
 
     return {"message": "Пользователь успешно создан",
             "username": user.username}
