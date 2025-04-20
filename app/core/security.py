@@ -1,4 +1,5 @@
 import jwt
+from jwt import InvalidTokenError
 
 from fastapi import Depends
 from datetime import datetime, timedelta, timezone
@@ -12,21 +13,27 @@ def hash_password(password: str) -> str:
     return bcrypt.hash(password)
 
 
-def verify_password_hash(plain_password, hashed_password):
+def verify_password_hash(plain_password: str, hashed_password: str) -> bool:
     return bcrypt.verify(plain_password, hashed_password)
 
 
 def create_access_token(
         data: dict,
-        expires_delta: timedelta = timedelta(jwt_settings.ACCESS_TOKEN_EXPIRE_MINUTES)) -> str:
+        expires_delta: timedelta = timedelta(jwt_settings.ACCESS_TOKEN_EXPIRE_MINUTES)
+) -> str:
     expire = datetime.now(timezone.utc) + expires_delta
-    to_encode = {**data, "exp": expire}
+
+    to_encode = {**data, "exp": expire, "type": "access"}
 
     return jwt.encode(
         to_encode,
         jwt_settings.SECRET_KEY,
         algorithm=jwt_settings.ALGORITHM
     )
+
+
+def decode_access_token(token: str):
+    return jwt.decode(token, jwt_settings.SECRET_KEY, algorithms=[jwt_settings.ALGORITHM])
 
 
 if __name__ == "__main__":
