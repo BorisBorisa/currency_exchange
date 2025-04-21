@@ -39,9 +39,4 @@ class Token(BaseModel):
 
 
 if __name__ == "__main__":
-    assert UserRegister(email="asd@yandex.ru",
-                        username="qwsd",
-                        password="A1ssddfd@s",
-                        first_name="df",
-                        last_name='dfd',
-                        birth_date="2011-11-11")
+    pass
