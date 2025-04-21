@@ -16,3 +16,10 @@ CREATE TABLE "user_profiles" (
 	"phone" VARCHAR(20),
 	"gender" VARCHAR(10)
 );
+
+
+CREATE TABLE "currencies" (
+    "id" INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    "currency_code" VARCHAR(3) NOT NULL,
+    "currency_name" VARCHAR(50) NOT NULL
+);
