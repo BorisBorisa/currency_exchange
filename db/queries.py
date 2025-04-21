@@ -57,3 +57,19 @@ async def register_user_in_db(conn: Connection, user: UserRegister, hashed_passw
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Произошла ошибка при регистрации"
         )
+
+
+async def get_supported_currencies(conn: Connection) -> dict:
+    try:
+        currencies = await conn.fetch(
+            "SELECT currency_code, currency_name FROM currencies",
+        )
+
+    except PostgresError as exc:
+        print(exc)  # Добавить логирование
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+        )
+
+
+    return dict(currencies)
