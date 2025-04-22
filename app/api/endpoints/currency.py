@@ -4,12 +4,12 @@ from asyncpg import Connection
 from typing import Annotated
 
 from app.core.security import get_current_active_user
-from app.utils.external_api import get_conversion_rates
+from app.utils.external_api import get_conversion_rates, get_pair_conversion_result
 
 from db.db_connecion import get_database_connection
 from db.queries import get_supported_currencies
 
-from app.api.schemas.currency import CurrencyPairConversion
+from app.api.schemas.currency import CurrencyPairConversion, ConvertedCurrencyPair
 
 currency = APIRouter(prefix="/currency", dependencies=[Depends(get_current_active_user)])
 
@@ -27,5 +27,6 @@ async def get_rates(base_currency: Annotated[str, Query(pattern="^[A-Z]{3}$")]):
 
 
 @currency.post("/exchange")
-async def exchange_currencies(conversion_pair: CurrencyPairConversion):
-    return conversion_pair
+async def exchange_currencies(conversion_pair: CurrencyPairConversion) -> ConvertedCurrencyPair:
+    converted_pair = await get_pair_conversion_result(conversion_pair)
+    return converted_pair
