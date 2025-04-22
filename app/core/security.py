@@ -9,7 +9,7 @@ from passlib.hash import bcrypt
 from typing import Annotated
 from asyncpg import Connection
 
-from app.core.config import jwt_settings
+from config import JWTSettings
 from app.api.schemas.user import UserInDB
 from db.db_connecion import get_database_connection
 from db.queries import get_user_by_username
@@ -25,7 +25,7 @@ def verify_password_hash(plain_password: str, hashed_password: str) -> bool:
 
 def create_access_token(
         data: dict,
-        expires_delta: timedelta = timedelta(jwt_settings.ACCESS_TOKEN_EXPIRE_MINUTES)
+        expires_delta: timedelta = timedelta(JWTSettings.ACCESS_TOKEN_EXPIRE_MINUTES)
 ) -> str:
     expire = datetime.now(timezone.utc) + expires_delta
 
@@ -33,13 +33,13 @@ def create_access_token(
 
     return jwt.encode(
         to_encode,
-        jwt_settings.SECRET_KEY,
-        algorithm=jwt_settings.ALGORITHM
+        JWTSettings.SECRET_KEY,
+        algorithm=JWTSettings.ALGORITHM
     )
 
 
 def decode_access_token(token: str):
-    return jwt.decode(token, jwt_settings.SECRET_KEY, algorithms=[jwt_settings.ALGORITHM])
+    return jwt.decode(token, JWTSettings.SECRET_KEY, algorithms=[JWTSettings.ALGORITHM])
 
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")

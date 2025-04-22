@@ -2,13 +2,16 @@ import httpx
 import json
 import asyncio
 
-from app.utils.config import ERAPI_settings
+from config import ERAPI_settings
 from app.api.schemas.currency import CurrencyPairConversion, ConvertedCurrencyPair
 
 
 async def get_conversion_rates(base_code: str):
     async with httpx.AsyncClient() as client:
-        api_response = await client.get(f"{ERAPI_settings.BASE_URL}/{ERAPI_settings.API_KEY}/latest/{base_code}")
+        api_response = await client.get(f"{ERAPI_settings.BASE_URL}/"
+                                        f"{ERAPI_settings.API_KEY}/latest/"
+                                        f"{base_code}")
+
         conversion_rates = json.loads(api_response.text)["conversion_rates"]
 
     return conversion_rates

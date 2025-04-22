@@ -4,7 +4,7 @@ from fastapi import FastAPI, Request
 from contextlib import asynccontextmanager
 from asyncpg import create_pool, Pool
 
-from db.config import settings
+from config import db_settings as settings
 
 
 # Инициализация и закрытие пула
