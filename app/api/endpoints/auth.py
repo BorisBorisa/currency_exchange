@@ -27,7 +27,7 @@ async def authenticate_user(
     return user
 
 
-@auth.post("/login", summary="эндпоинт для получения токена", tags=["tokenUrl"])
+@auth.post("/login", summary="Эндпоинт для получения токена", tags=["tokenUrl"])
 async def login_for_access_token(
         from_data: Annotated[OAuth2PasswordRequestForm, Depends()],
         conn: Connection = Depends(get_database_connection)

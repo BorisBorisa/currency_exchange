@@ -56,9 +56,11 @@ class JWTSettings(BaseSettings):
     )
 
 
-jwt_settings = JWTSettings()
+JWT_settings = JWTSettings()
 ERAPI_settings = ExchangeRateAPISettings()
-db_settings = DatabaseSettings()
+DB_settings = DatabaseSettings()
 
 if __name__ == "__main__":
-    print(db_settings.dns)
+    print(DB_settings.dns)
+    print(JWT_settings.SECRET_KEY)
+    print(ERAPI_settings.BASE_URL)

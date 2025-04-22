@@ -9,7 +9,7 @@ from passlib.hash import bcrypt
 from typing import Annotated
 from asyncpg import Connection
 
-from config import JWTSettings
+from config import JWT_settings
 from app.api.schemas.user import UserInDB
 from db.db_connecion import get_database_connection
 from db.queries import get_user_by_username
@@ -25,7 +25,7 @@ def verify_password_hash(plain_password: str, hashed_password: str) -> bool:
 
 def create_access_token(
         data: dict,
-        expires_delta: timedelta = timedelta(JWTSettings.ACCESS_TOKEN_EXPIRE_MINUTES)
+        expires_delta: timedelta = timedelta(JWT_settings.ACCESS_TOKEN_EXPIRE_MINUTES)
 ) -> str:
     expire = datetime.now(timezone.utc) + expires_delta
 
@@ -33,13 +33,13 @@ def create_access_token(
 
     return jwt.encode(
         to_encode,
-        JWTSettings.SECRET_KEY,
-        algorithm=JWTSettings.ALGORITHM
+        JWT_settings.SECRET_KEY,
+        algorithm=JWT_settings.ALGORITHM
     )
 
 
 def decode_access_token(token: str):
-    return jwt.decode(token, JWTSettings.SECRET_KEY, algorithms=[JWTSettings.ALGORITHM])
+    return jwt.decode(token, JWT_settings.SECRET_KEY, algorithms=[JWT_settings.ALGORITHM])
 
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
@@ -79,4 +79,6 @@ async def get_current_active_user(
 
 
 if __name__ == "__main__":
-    pass
+    print(JWT_settings.ALGORITHM)
+    print(JWT_settings.SECRET_KEY)
+    print(JWT_settings.ACCESS_TOKEN_EXPIRE_MINUTES)

@@ -11,22 +11,22 @@ from db.queries import get_supported_currencies
 
 from app.api.schemas.currency import CurrencyPairConversion, ConvertedCurrencyPair
 
-currency = APIRouter(prefix="/currency", dependencies=[Depends(get_current_active_user)])
+currency = APIRouter(prefix="/currency", dependencies=[Depends(get_current_active_user)], tags=["currency"])
 
 
-@currency.get("/list")
+@currency.get("/list", summary="Эндпоинт для получения списка доступных валют")
 async def get_currencies_list(conn: Connection = Depends(get_database_connection)):
     currencies: dict = await get_supported_currencies(conn)
     return currencies
 
 
-@currency.get("/rates")
+@currency.get("/rates", summary="Эндпоинт для получения обменных курсов валют")
 async def get_rates(base_currency: Annotated[str, Query(pattern="^[A-Z]{3}$")]):
     conversion_rates = await get_conversion_rates(base_currency)
     return conversion_rates
 
 
-@currency.post("/exchange")
+@currency.post("/exchange", summary="Эндпоинт для конвертации пары валют")
 async def exchange_currencies(conversion_pair: CurrencyPairConversion) -> ConvertedCurrencyPair:
     converted_pair = await get_pair_conversion_result(conversion_pair)
     return converted_pair

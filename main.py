@@ -13,7 +13,7 @@ app.include_router(currency.currency)
 
 
 
-@app.get("/")
+@app.get("/", tags=["main"])
 async def main_page():
     return {"message": "Welcome user"}
 

@@ -4,19 +4,19 @@ from fastapi import FastAPI, Request
 from contextlib import asynccontextmanager
 from asyncpg import create_pool, Pool
 
-from config import db_settings as settings
+from config import DB_settings
 
 
 # Инициализация и закрытие пула
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     connection_pool = await create_pool(
-        dsn=settings.dns,
-        min_size=settings.POOL_MIN,
-        max_size=settings.POOL_MAX,
-        command_timeout=settings.POOL_TIMEOUT,
+        dsn=DB_settings.dns,
+        min_size=DB_settings.POOL_MIN,
+        max_size=DB_settings.POOL_MAX,
+        command_timeout=DB_settings.POOL_TIMEOUT,
         server_settings={
-            'search_path': settings.SCHEMA
+            'search_path': DB_settings.SCHEMA
         }
     )
 
