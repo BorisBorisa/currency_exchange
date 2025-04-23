@@ -1,10 +1,11 @@
 from pydantic import BaseModel, Field
+from typing import Annotated
 
 
 class CurrencyPairConversion(BaseModel):
-    base_currency: str = Field(pattern="^[A-Z]{3}$", example="RUB")
-    target_currency: str= Field(pattern="^[A-Z]{3}$", example="USD")
-    amount: float = Field(gt=0)
+    base_currency: Annotated[str, Field(pattern="^[A-Z]{3}$")]
+    target_currency: Annotated[str, Field(pattern="^[A-Z]{3}$")]
+    amount: Annotated[float, Field(gt=0)]
 
 
 class ConvertedCurrencyPair(CurrencyPairConversion):
