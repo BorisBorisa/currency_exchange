@@ -24,6 +24,7 @@ async def get_user_by_username(conn: Connection, username: str) -> UserInDB | No
             disabled=user["disabled"],
             hashed_password=user["password_hash"]
         )
+    return None
 
 
 async def register_user_in_db(conn: Connection, user: UserRegister, hashed_password: str) -> None:
