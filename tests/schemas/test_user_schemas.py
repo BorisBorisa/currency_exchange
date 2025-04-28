@@ -1,7 +1,7 @@
 import pytest
 from pydantic import ValidationError
 from app.api.schemas import user
-from tests.test_data import correct_passwords, invalid_passwords, invalid_emails
+from tests.schemas.test_data import correct_passwords, invalid_passwords, invalid_emails
 
 
 @pytest.mark.parametrize("password", correct_passwords)
@@ -34,9 +34,7 @@ def test_user():
 
 
 
-@pytest.mark.parametrize("username", (
-    "1", 1, 1.2, "A"
-))
+@pytest.mark.parametrize("username", ("1", 1, 1.2, "A"))
 def test_user_invalid_username(username):
     with pytest.raises(ValidationError):
         user.User(
@@ -58,10 +56,10 @@ def test_user_in_db():
     model = user.UserInDB(
         email="test@gmail.com",
         username="test",
-        hashed_password="hashed_password_asdasd"
+        hashed_password="hashed_password_abcdefg"
     )
 
-    assert model.hashed_password == "hashed_password_asdasd"
+    assert model.hashed_password == "hashed_password_abcdefg"
     assert model.disabled == False
 
 
