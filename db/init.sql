@@ -9,9 +9,7 @@ CREATE TABLE "users" (
 
 CREATE TABLE "user_profiles" (
 	"id" INTEGER PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,
-	"first_name" VARCHAR(50) NOT NULL,
-	"last_name" VARCHAR(50) NOT NULL,
-    "birth_date" DATE NOT NULL,
+    "birth_date" DATE,
 	"avatar_url" VARCHAR(255),
 	"phone" VARCHAR(20),
 	"gender" VARCHAR(10)

@@ -38,10 +38,8 @@ async def register_user_in_db(conn: Connection, user: UserRegister, hashed_passw
             )
 
             await conn.execute(
-                "INSERT INTO user_profiles(id, first_name, last_name, birth_date) VALUES($1, $2, $3, $4)",
+                "INSERT INTO user_profiles(id, birth_date) VALUES($1, $2)",
                 user_id,
-                user.first_name,
-                user.last_name,
                 user.birth_date
             )
 
