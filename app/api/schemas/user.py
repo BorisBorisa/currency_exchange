@@ -10,9 +10,6 @@ class User(BaseModel):
 
 class UserRegister(User):
     password: str
-    first_name: str
-    last_name: str
-    birth_date: date
 
     @field_validator("password")
     def validate_password(cls, password: str) -> str:
@@ -33,10 +30,18 @@ class UserInDB(User):
     disabled: bool = False
 
 
+# Нужно реализовать route который предоставляет информацию о пользователе и возможность эти данные передать
+class UserInfo(User):
+    birth_date: date
+    avatar_url: str
+    phone: str
+    gender: str
+
+
 class Token(BaseModel):
     access_token: str
     token_type: str
 
 
 if __name__ == "__main__":
-    pass
+    print(EmailStr("user#@example.com"))
