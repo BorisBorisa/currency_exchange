@@ -25,10 +25,14 @@ def verify_password_hash(plain_password: str, hashed_password: str) -> bool:
 
 def create_access_token(
         data: dict,
-        expires_delta: timedelta = timedelta(JWT_settings.ACCESS_TOKEN_EXPIRE_MINUTES)
+        expires_delta: timedelta | None = None
 ) -> str:
-    expire = datetime.now(timezone.utc) + expires_delta
 
+    if expires_delta is None:
+        expires_delta = timedelta(minutes=JWT_settings.ACCESS_TOKEN_EXPIRE_MINUTES)
+
+
+    expire = datetime.now(timezone.utc) + expires_delta
     to_encode = {**data, "exp": expire, "type": "access"}
 
     return jwt.encode(
@@ -47,7 +51,7 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
 
 async def get_current_user(
         token: Annotated[str, Depends(oauth2_scheme)],
-        conn: Connection = Depends(get_database_connection),
+        conn: Annotated[Connection, Depends(get_database_connection)]
 ) -> UserInDB:
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
@@ -61,6 +65,7 @@ async def get_current_user(
         if username is None:
             raise credentials_exception
 
+
     except InvalidTokenError as exc:
         raise credentials_exception
 
@@ -73,9 +78,10 @@ async def get_current_active_user(
         current_user: Annotated[UserInDB, Depends(get_current_user)],
 ):
     if current_user.disabled:
-        raise HTTPException(status_code=400, detail="Inactive user")
+        raise HTTPException(status_code=400, detail="Неактивный пользователь")
 
     return current_user
+
 
 
 if __name__ == "__main__":
