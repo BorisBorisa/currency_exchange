@@ -97,34 +97,34 @@ class TestAccessToken:
 
 
 @pytest.mark.asyncio
-async def test_get_current_user(mocker: MockFixture):
+async def test_get_current_user(mocker: MockFixture, conn):
     mocker.patch("app.core.security.decode_access_token", return_value={"sub": "test_user"})
     mocker.patch("app.core.security.get_user_by_username", new=mocker.AsyncMock(return_value="test_UserInDB"))
 
-    user = await security.get_current_user("token", mocker.AsyncMock())
+    user = await security.get_current_user("token", conn)
 
     assert user == "test_UserInDB"
 
 
 @pytest.mark.asyncio
-async def test_get_current_user_invalid_token(mocker: MockFixture):
+async def test_get_current_user_invalid_token(mocker: MockFixture, conn):
     mocker.patch("app.core.security.decode_access_token", side_effect=InvalidTokenError())
     mocker.patch("app.core.security.get_user_by_username", new=mocker.AsyncMock(return_value="test_UserInDB"))
 
     with pytest.raises(HTTPException) as exc:
-        await security.get_current_user("token", mocker.AsyncMock())
+        await security.get_current_user("token", conn)
 
     assert exc.value.status_code == 401
     assert exc.value.detail == "Не удалось подтвердить учетные данные"
 
 
 @pytest.mark.asyncio
-async def test_get_current_user_missing_user_in_token(mocker: MockFixture):
+async def test_get_current_user_missing_user_in_token(mocker: MockFixture, conn):
     mocker.patch("app.core.security.decode_access_token", return_value={})
     mocker.patch("app.core.security.get_user_by_username", new=mocker.AsyncMock(return_value="test_UserInDB"))
 
     with pytest.raises(HTTPException) as exc:
-        await security.get_current_user("token", mocker.AsyncMock())
+        await security.get_current_user("token", conn)
 
     assert exc.value.status_code == 401
     assert exc.value.detail == "Не удалось подтвердить учетные данные"

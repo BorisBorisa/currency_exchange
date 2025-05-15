@@ -44,4 +44,5 @@ class Token(BaseModel):
 
 
 if __name__ == "__main__":
-    print(EmailStr("user#@example.com"))
+    pass
+

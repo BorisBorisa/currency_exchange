@@ -1,7 +1,5 @@
-from fastapi import APIRouter, Depends, status, HTTPException
-
+from fastapi import APIRouter, Depends, status
 from asyncpg import Connection
-from asyncpg.exceptions import UniqueViolationError, PostgresError
 
 from db.db_connecion import get_database_connection
 from db.queries import register_user_in_db
