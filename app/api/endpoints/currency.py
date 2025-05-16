@@ -1,15 +1,13 @@
 from fastapi import APIRouter, Depends, Query
 from asyncpg import Connection
-
 from typing import Annotated
 
 from app.core.security import get_current_active_user
 from app.utils.external_api import get_conversion_rates, get_pair_conversion_result
+from app.api.schemas.currency import CurrencyPairConversion, ConvertedCurrencyPair
 
 from db.db_connecion import get_database_connection
 from db.queries import get_supported_currencies
-
-from app.api.schemas.currency import CurrencyPairConversion, ConvertedCurrencyPair
 
 currency = APIRouter(prefix="/currency", dependencies=[Depends(get_current_active_user)], tags=["currency"])
 
