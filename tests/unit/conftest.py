@@ -10,18 +10,6 @@ from unittest.mock import AsyncMock
 from main import app
 
 
-@pytest.fixture(scope="module")
-def client():
-    return TestClient(app)
-
-
-@pytest.fixture()
-def override_database_connection(client):
-    client.app.dependency_overrides[get_database_connection] = lambda: AsyncMock()
-    yield
-    client.app.dependency_overrides.clear()
-
-
 @pytest.fixture()
 def override_login_form(client):
     def mock_oauth_form():
@@ -30,7 +18,7 @@ def override_login_form(client):
             password="Qwerty1!"
         )
 
-    app.dependency_overrides[OAuth2PasswordRequestForm] = mock_oauth_form
+    client.app.dependency_overrides[OAuth2PasswordRequestForm] = mock_oauth_form
     yield
     client.app.dependency_overrides.clear()
 
