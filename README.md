@@ -117,3 +117,49 @@
 - **ExchangeRate-API**
 - **URL:** https://www.exchangerate-api.com/
 
+## Как запустить проект:
+
+#### Клонировать репозиторий и перейти в него в командной строке:
+
+```
+git clone https://github.com/BorisBorisa/currency_exchange.git
+cd currency_exchange
+```
+
+#### Cоздать и активировать виртуальное окружение:
+
+```
+python3 -m venv venv
+
+Windows (CMD/PowerShell) 
+  venv\Scripts\activate
+
+Linux/macOS (Bash/Zsh)
+  source venv/bin/activate
+  
+python3 -m pip install --upgrade pip
+```
+
+#### Установить зависимости из файла requirements.txt:
+
+```
+pip install -r requirements.txt
+```
+
+#### Cоздать базу данных в PostgreSQL. Скрипты создания и наполнения таблиц находится db/init.sql
+#### Создать файл .env и указать переменные окружения для подключения к БД, секретный ключ для JWT токенов и ключ для внешнего API по примеру example.env
+
+#### Запуск проекта
+```
+uvicorn main:app
+```
+_Доступ к API Сервер по умолчанию работает на http://127.0.0.1:8000_
+
+#### Запуск тестов
+```
+unitest -v
+```
+
+
+
+
