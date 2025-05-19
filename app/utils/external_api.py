@@ -1,6 +1,5 @@
 import httpx
 import json
-import asyncio
 
 from fastapi import HTTPException, status
 from httpx import TimeoutException, HTTPError, Response
