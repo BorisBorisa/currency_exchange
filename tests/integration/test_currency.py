@@ -23,19 +23,19 @@ EXCHANGE_CURRENCIES_RESPONSE = {
 }
 
 EXCHANGE_CURRENCY_RATES_RESPONSE = {
- "result":"success",
- "documentation":"https://www.exchangerate-api.com/docs",
- "terms_of_use":"https://www.exchangerate-api.com/terms",
- "time_last_update_unix":1747353601,
- "time_last_update_utc":"Fri, 16 May 2025 00:00:01 +0000",
- "time_next_update_unix":1747440001,
- "time_next_update_utc":"Sat, 17 May 2025 00:00:01 +0000",
- "base_code":"RUB",
- "conversion_rates":{
-  "RUB":1,
-  "EUR":0.01114,
-  "USD":0.01247,
- }
+    "result": "success",
+    "documentation": "https://www.exchangerate-api.com/docs",
+    "terms_of_use": "https://www.exchangerate-api.com/terms",
+    "time_last_update_unix": 1747353601,
+    "time_last_update_utc": "Fri, 16 May 2025 00:00:01 +0000",
+    "time_next_update_unix": 1747440001,
+    "time_next_update_utc": "Sat, 17 May 2025 00:00:01 +0000",
+    "base_code": "RUB",
+    "conversion_rates": {
+        "RUB": 1,
+        "EUR": 0.01114,
+        "USD": 0.01247,
+    }
 }
 
 EXCHANGE_CURRENCIES_ERROR_RESPONSE = {
@@ -60,7 +60,6 @@ async def test_exchange_currencies_route(
     assert response.status_code == 200
     assert EXCHANGE_CURRENCIES_REQUEST_BODY.items() <= response.json().items()
     assert "conversion_result" in response.json()
-
 
 
 @pytest.mark.asyncio
@@ -90,16 +89,6 @@ async def test_exchange_currencies_list(
 
     assert response.status_code == 200
     assert len(response.json()) == 163
-
-
-@pytest.mark.asyncio
-async def test_exchange_currencies_list(
-        client,
-        mocker: MockFixture,
-        override_get_current_active_user
-):
-    with client:
-        response = client.get("/currency/list")
 
 
 @pytest.mark.asyncio
@@ -151,6 +140,3 @@ async def test_exchange_currencies_route_api_response_error(
 
     assert response.status_code == 502
     assert "unknown-code" in response.text
-
-
-

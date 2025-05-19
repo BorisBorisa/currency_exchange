@@ -3,13 +3,13 @@ from typing import Annotated
 from fastapi.security import OAuth2PasswordRequestForm
 from asyncpg import Connection
 
-
 from db.db_connecion import get_database_connection
 from db.queries import get_user_by_username
 from app.api.schemas.user import Token, UserInDB
-from app.core.security import  create_access_token, verify_password_hash
+from app.core.security import create_access_token, verify_password_hash
 
 auth = APIRouter()
+
 
 async def authenticate_user(
         username: str,

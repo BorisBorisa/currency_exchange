@@ -38,20 +38,21 @@ async def register_user_in_db(conn: Connection, user: UserRegister, hashed_passw
             )
 
             await conn.execute(
-                "INSERT INTO user_profiles(id, birth_date) VALUES($1, $2)",
-                user_id,
-                user.birth_date
+                "INSERT INTO user_profiles(id) VALUES($1)",
+                user_id
             )
 
     except UniqueViolationError as exc:
-        print(exc)  # Добавить логирование
+        # Добавить логирование
+
         raise HTTPException(
             status_code=status.HTTP_409_CONFLICT,
             detail="Пользователь с таким email или username уже существует"
         )
 
     except PostgresError as exc:
-        print(exc)  # Добавить логирование
+        # Добавить логирование
+
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Произошла ошибка при регистрации"
@@ -65,7 +66,8 @@ async def get_supported_currencies(conn: Connection) -> dict:
         )
 
     except PostgresError as exc:
-        print(exc)  # Добавить логирование
+        # Добавить логирование
+
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
         )

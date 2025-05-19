@@ -1,22 +1,13 @@
 import pytest
 from pytest_mock import MockFixture
-from fastapi.testclient import TestClient
 from fastapi.security import OAuth2PasswordRequestForm
 from app.api.schemas.user import User, UserRegister, UserInDB
 
-from db.db_connecion import get_database_connection
-from unittest.mock import AsyncMock
-
-from main import app
-
 
 @pytest.fixture()
-def override_login_form(client):
+def override_login_form(client, oauth2_request_form):
     def mock_oauth_form():
-        return OAuth2PasswordRequestForm(
-            username="test_name",
-            password="Qwerty1!"
-        )
+        return oauth2_request_form
 
     client.app.dependency_overrides[OAuth2PasswordRequestForm] = mock_oauth_form
     yield
